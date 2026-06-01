@@ -27,3 +27,13 @@ class MissingMakeScreenshotFuncCallError(Error):
 class MissingPlatformArgError(Error):
     code = 'OCS302'
     message = 'test is missing "platform" argument in page opening context call'
+
+
+class MissingPlatformInSubjectError(Error):
+    code = "OCS103"
+    message = 'subject must contain one of platform from dicts/platforms.py'
+
+
+class InvalidPlatformInSubjectError(Error):
+    code = "OCS104"
+    message = 'platform in subject must correspond to the platform in allure labels'

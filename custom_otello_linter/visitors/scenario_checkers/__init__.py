@@ -1,1 +1,2 @@
 from .decorator_vedro_params_checker import VedroParamsChecker
+from .subject_checker import SubjectChecker

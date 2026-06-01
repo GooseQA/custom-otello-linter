@@ -25,6 +25,8 @@ ignore = OCS101
 ### Scenario Rules
 1. [OCS101. Decorator @vedro.params should not be presented](./custom_otello_linter/rules/OCS101.md)
 2. [OCS102. Missing "SCREENSHOTS" allure label when using "make_screenshot_for_comparison"](./custom_otello_linter/rules/OCS102.md)
+3. [OCS103. Subject must contain platform](./custom_otello_linter/rules/OCS103.md)
+4. [OCS104. Platform in subject must correspond to the platform in allure labels](./custom_otello_linter/rules/OCS104.md)
 
 ###  Scenario Steps Rules
 1. [OCS300. Function make_screenshot used once](./custom_otello_linter/rules/OCS300.md)
