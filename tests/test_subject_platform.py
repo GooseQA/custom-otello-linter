@@ -33,7 +33,7 @@ def test_subject_with_concrete_allowed_platform():
     assert_not_error(ScenarioVisitor, code)
 
 
-def test_subject_without_platform_in_parentheses():
+def test_subject_without_platform():
     ScenarioVisitor.deregister_all()
     ScenarioVisitor.register_scenario_checker(SubjectChecker)
     code = """
@@ -113,3 +113,17 @@ def test_only_allure_platform():
             pass
     """
     assert_error(ScenarioVisitor, code, MissingPlatformInSubjectError)
+
+
+def test_several_allure_labels_and_platform_matches_subject_platform():
+    ScenarioVisitor.deregister_all()
+    ScenarioVisitor.register_scenario_checker(SubjectChecker)
+    code = """
+    @allure_labels(Feature.HOTEL, Story.HOTEL_CARD, Platform.MOBILE, Priority.P0)
+    class Scenario:
+        subject = "Open checkout (mobile)"
+
+        def when_user_open_checkout(self):
+            pass
+    """
+    assert_not_error(ScenarioVisitor, code)

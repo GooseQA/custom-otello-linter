@@ -27,15 +27,16 @@ class SubjectChecker(ScenarioChecker):
         allowed_platforms = set(self._LABEL_TO_SUBJECT_PLATFORM.values()) | {"{platform}"}
         subject_value, subject_node = get_subject(context.scenario_node)
 
+        # ищем указание платформы в последних круглых скобках сабджекта
         matches = re.findall(r"\(([^()]*)\)", subject_value)
         subject_platform = matches[-1].strip() if matches else None
-
+        # проверяем, что платформа указана и она из заданного списка платформ
         if subject_platform not in allowed_platforms:
             return [MissingPlatformInSubjectError(
                 lineno=subject_node.lineno,
                 col_offset=subject_node.col_offset
             )]
-
+        # проверяем, что платформа в subject соответствует указанной в allure_labels
         allure_platform, allure_platform_node = self._extract_allure_platform(context.scenario_node)
         if allure_platform is not None and subject_platform != allure_platform:
             node = allure_platform_node or subject_node
@@ -47,6 +48,11 @@ class SubjectChecker(ScenarioChecker):
         return []
 
     def _extract_allure_platform(self, scenario_node: ast.ClassDef) -> Tuple[Optional[str], Optional[ast.AST]]:
+        """
+        Ищет в декораторе @allure_labels указание платформы вида Platform.X.
+        Возвращает кортеж: (значение платформы для subject, AST-узел аргумента).
+        Если платформа не найдена, возвращает (None, None).
+        """
         allure_decorator = self.get_allure_labels_decorator(scenario_node)
         if not allure_decorator:
             return None, None
