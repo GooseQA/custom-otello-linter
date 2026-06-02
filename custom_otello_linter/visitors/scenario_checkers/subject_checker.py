@@ -28,8 +28,9 @@ class SubjectChecker(ScenarioChecker):
         subject_value, subject_node = get_subject(context.scenario_node)
 
         # ищем указание платформы в последних круглых скобках сабджекта
+        # заменяем _ на пробел, чтобы mobile app и mobile_app считались равными
         matches = re.findall(r"\(([^()]*)\)", subject_value)
-        subject_platform = matches[-1].strip() if matches else None
+        subject_platform = matches[-1].strip().replace("_", " ") if matches else None
         # проверяем, что платформа указана и она из заданного списка платформ
         if subject_platform not in allowed_platforms:
             return [MissingPlatformInSubjectError(

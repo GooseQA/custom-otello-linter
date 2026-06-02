@@ -33,6 +33,19 @@ def test_subject_with_concrete_allowed_platform():
     assert_not_error(ScenarioVisitor, code)
 
 
+def test_subject_with_underscore_platform():
+    ScenarioVisitor.deregister_all()
+    ScenarioVisitor.register_scenario_checker(SubjectChecker)
+    code = """
+    class Scenario:
+        subject = "Open checkout (mobile_app)"
+
+        def when_user_open_checkout(self):
+            pass
+    """
+    assert_not_error(ScenarioVisitor, code)
+
+
 def test_subject_without_platform():
     ScenarioVisitor.deregister_all()
     ScenarioVisitor.register_scenario_checker(SubjectChecker)

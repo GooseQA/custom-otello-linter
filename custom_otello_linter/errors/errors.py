@@ -31,7 +31,7 @@ class MissingPlatformArgError(Error):
 
 class MissingPlatformInSubjectError(Error):
     code = "OCS103"
-    message = 'subject must contain platform or ({platform}) placeholder'
+    message = 'subject must contain platform or ({{platform}}) placeholder'
 
 
 class InvalidPlatformInSubjectError(Error):
