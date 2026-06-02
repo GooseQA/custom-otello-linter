@@ -14,12 +14,12 @@ from custom_otello_linter.helpers.get_subject import get_subject
 class SubjectChecker(ScenarioChecker):
     _LABEL_TO_SUBJECT_PLATFORM = {
         "MOBILE": "mobile",
-        "IOS_WEB_MOBILE": "ios_web_mobile",
-        "ANDROID_WEB_MOBILE": "android_web_mobile",
+        "IOS_WEB_MOBILE": "ios web",
+        "ANDROID_WEB_MOBILE": "android web",
         "DESKTOP": "desktop",
-        "MOBILE_APP": "mobile_app",
-        "ANDROID_MOBILE_APP": "android_mobile_app",
-        "IOS_MOBILE_APP": "ios_mobile_app",
+        "MOBILE_APP": "mobile app",
+        "ANDROID_MOBILE_APP": "android mobile app",
+        "IOS_MOBILE_APP": "ios mobile app",
         "SBOL": "SBOL",
     }
 
