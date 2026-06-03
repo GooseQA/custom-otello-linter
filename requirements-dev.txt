@@ -1,4 +1,4 @@
-isort==5.12.0
+isort
 pytest>=7.2,<8
 mypy==1.0.0
 astpretty

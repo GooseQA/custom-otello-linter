@@ -31,9 +31,16 @@ class MissingPlatformArgError(Error):
 
 class MissingPlatformInSubjectError(Error):
     code = "OCS103"
-    message = 'subject must contain platform or ({{platform}}) placeholder'
+    message = ('missing platform in subject: must contain one of platform from dicts.platforms in (platform_from_dicts)'
+               'or ({{platform}}) placeholder')
 
 
 class InvalidPlatformInSubjectError(Error):
     code = "OCS104"
-    message = 'platform in subject must correspond to the platform in allure labels'
+    message = ('invalid platform in subject: platform in subject must be placed in the end of the subject '
+               'and be one of dicts.platforms in (platform_from_dicts) or ({{platform}}) placeholder')
+
+
+class NotMatchingPlatformInSubjectError(Error):
+    code = "OCS105"
+    message = 'platform in subject doesn`t match platform in allure labels'

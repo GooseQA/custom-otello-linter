@@ -5,7 +5,11 @@ from typing import List, Optional, Tuple
 from flake8_plugin_utils import Error
 
 from custom_otello_linter.abstract_checkers import ScenarioChecker
-from custom_otello_linter.errors import MissingPlatformInSubjectError, InvalidPlatformInSubjectError
+from custom_otello_linter.errors import (
+    MissingPlatformInSubjectError,
+    NotMatchingPlatformInSubjectError,
+    InvalidPlatformInSubjectError
+)
 from custom_otello_linter.visitors.scenario_visitor import Context, ScenarioVisitor
 from custom_otello_linter.helpers.get_subject import get_subject
 
@@ -32,8 +36,13 @@ class SubjectChecker(ScenarioChecker):
         matches = re.findall(r"\(([^()]*)\)", subject_value)
         subject_platform = matches[-1].strip().replace("_", " ") if matches else None
         # проверяем, что платформа указана и она из заданного списка платформ
-        if subject_platform not in allowed_platforms:
+        if subject_platform is None:
             return [MissingPlatformInSubjectError(
+                lineno=subject_node.lineno,
+                col_offset=subject_node.col_offset
+            )]
+        if subject_platform not in allowed_platforms:
+            return [InvalidPlatformInSubjectError(
                 lineno=subject_node.lineno,
                 col_offset=subject_node.col_offset
             )]
@@ -41,7 +50,7 @@ class SubjectChecker(ScenarioChecker):
         allure_platform, allure_platform_node = self._extract_allure_platform(context.scenario_node)
         if allure_platform is not None and subject_platform != allure_platform:
             node = allure_platform_node or subject_node
-            return [InvalidPlatformInSubjectError(
+            return [NotMatchingPlatformInSubjectError(
                 lineno=node.lineno,
                 col_offset=node.col_offset
             )]

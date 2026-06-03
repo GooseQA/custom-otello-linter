@@ -4,6 +4,7 @@ from .errors import (
     MissingScreenshotsAllureLabelError,
     MissingPlatformInSubjectError,
     InvalidPlatformInSubjectError,
+    NotMatchingPlatformInSubjectError,
     MultipleScreenshotsError,
     MissingPlatformArgError
 )
