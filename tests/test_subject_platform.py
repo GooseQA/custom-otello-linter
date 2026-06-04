@@ -63,6 +63,18 @@ def test_subject_with_long_platform_without_underscore():
     assert_not_error(ScenarioVisitor, code)
 
 
+def test_subject_with_several_parentheses():
+    ScenarioVisitor.deregister_all()
+    ScenarioVisitor.register_scenario_checker(SubjectChecker)
+    code = """
+    class Scenario:
+        subject = "Open checkout (as abroad user) (mobile_app)"
+
+        def when_user_open_checkout(self):
+            pass
+    """
+    assert_not_error(ScenarioVisitor, code)
+
 
 def test_subject_without_platform():
     ScenarioVisitor.deregister_all()
@@ -70,6 +82,19 @@ def test_subject_without_platform():
     code = """
     class Scenario:
         subject = "Open checkout"
+
+        def when_user_open_checkout(self):
+            pass
+    """
+    assert_error(ScenarioVisitor, code, MissingPlatformInSubjectError)
+
+
+def test_subject_platform_without_parentheses():
+    ScenarioVisitor.deregister_all()
+    ScenarioVisitor.register_scenario_checker(SubjectChecker)
+    code = """
+    class Scenario:
+        subject = "Open checkout android_mobile_app"
 
         def when_user_open_checkout(self):
             pass

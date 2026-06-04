@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 from flake8_plugin_utils import Error
 
+from custom_otello_linter.dicts.platforms import Platforms
 from custom_otello_linter.abstract_checkers import ScenarioChecker
 from custom_otello_linter.errors import (
     MissingPlatformInSubjectError,
@@ -16,20 +17,13 @@ from custom_otello_linter.helpers.get_subject import get_subject
 
 @ScenarioVisitor.register_scenario_checker
 class SubjectChecker(ScenarioChecker):
-    _LABEL_TO_SUBJECT_PLATFORM = {
-        "MOBILE": "mobile",
-        "IOS_WEB_MOBILE": "ios web",
-        "ANDROID_WEB_MOBILE": "android web",
-        "DESKTOP": "desktop",
-        "MOBILE_APP": "mobile app",
-        "ANDROID_MOBILE_APP": "android mobile app",
-        "IOS_MOBILE_APP": "ios mobile app",
-        "SBOL": "SBOL",
-    }
 
     def check_scenario(self, context: Context, config) -> List[Error]:
-        allowed_platforms = set(self._LABEL_TO_SUBJECT_PLATFORM.values()) | {"{platform}"}
+        allowed_platforms = set(Platforms.LABEL_TO_SUBJECT_PLATFORM.values()) | {"{platform}"}
         subject_value, subject_node = get_subject(context.scenario_node)
+        # на всякий случай игнорируем (наш фреймворк не позволяет запускать тесты без сабджекта)
+        if subject_value is None or subject_node is None:
+            return []
 
         # ищем указание платформы в последних круглых скобках сабджекта
         # заменяем _ на пробел, чтобы mobile app и mobile_app считались равными
@@ -72,8 +66,8 @@ class SubjectChecker(ScenarioChecker):
                 isinstance(arg, ast.Attribute)
                 and isinstance(arg.value, ast.Name)
                 and arg.value.id == "Platform"
-                and arg.attr in self._LABEL_TO_SUBJECT_PLATFORM
+                and arg.attr in Platforms.LABEL_TO_SUBJECT_PLATFORM
             ):
-                return self._LABEL_TO_SUBJECT_PLATFORM[arg.attr], arg
+                return Platforms.LABEL_TO_SUBJECT_PLATFORM[arg.attr], arg
 
         return None, None

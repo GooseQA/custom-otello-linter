@@ -31,14 +31,14 @@ class MissingPlatformArgError(Error):
 
 class MissingPlatformInSubjectError(Error):
     code = "OCS103"
-    message = ('missing platform in subject: must contain one of platform from dicts.platforms in (platform_from_dicts)'
+    message = ('missing platform in subject: must contain one of platform from dicts.platforms as (platform)'
                'or ({{platform}}) placeholder')
 
 
 class InvalidPlatformInSubjectError(Error):
     code = "OCS104"
     message = ('invalid platform in subject: platform in subject must be placed in the end of the subject '
-               'and be one of dicts.platforms in (platform_from_dicts) or ({{platform}}) placeholder')
+               'and be one of dicts.platforms as (platform) or ({{platform}}) placeholder')
 
 
 class NotMatchingPlatformInSubjectError(Error):
