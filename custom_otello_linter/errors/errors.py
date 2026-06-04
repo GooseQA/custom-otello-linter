@@ -27,3 +27,20 @@ class MissingMakeScreenshotFuncCallError(Error):
 class MissingPlatformArgError(Error):
     code = 'OCS302'
     message = 'test is missing "platform" argument in page opening context call'
+
+
+class MissingPlatformInSubjectError(Error):
+    code = "OCS103"
+    message = ('missing platform in subject: must contain one of platform from dicts.platforms as (platform)'
+               'or ({{platform}}) placeholder')
+
+
+class InvalidPlatformInSubjectError(Error):
+    code = "OCS104"
+    message = ('invalid platform in subject: platform in subject must be placed in the end of the subject '
+               'and be one of dicts.platforms as (platform) or ({{platform}}) placeholder')
+
+
+class NotMatchingPlatformInSubjectError(Error):
+    code = "OCS105"
+    message = 'platform in subject doesn`t match platform in allure labels'

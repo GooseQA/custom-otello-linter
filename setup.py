@@ -15,7 +15,7 @@ def find_dev_required():
 
 setup(
     name="custom-otello-linter",
-    version="1.0.5",
+    version="1.0.6",
     description="flake8 based linter for frontend tests",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
