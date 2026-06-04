@@ -18,24 +18,23 @@ from custom_otello_linter.helpers.get_subject import get_subject
 @ScenarioVisitor.register_scenario_checker
 class SubjectChecker(ScenarioChecker):
 
+    _ALLOWED_PLATFORMS = (set(Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM.values()) | {"{platform}"})
+
     def check_scenario(self, context: Context, config) -> List[Error]:
-        allowed_platforms = set(Platforms.LABEL_TO_SUBJECT_PLATFORM.values()) | {"{platform}"}
         subject_value, subject_node = get_subject(context.scenario_node)
         # на всякий случай игнорируем (наш фреймворк не позволяет запускать тесты без сабджекта)
         if subject_value is None or subject_node is None:
             return []
 
         # ищем указание платформы в последних круглых скобках сабджекта
-        # заменяем _ на пробел, чтобы mobile app и mobile_app считались равными
-        matches = re.findall(r"\(([^()]*)\)", subject_value)
-        subject_platform = matches[-1].strip().replace("_", " ") if matches else None
+        subject_platform = self._extract_subject_platform(subject_value)
         # проверяем, что платформа указана и она из заданного списка платформ
         if subject_platform is None:
             return [MissingPlatformInSubjectError(
                 lineno=subject_node.lineno,
                 col_offset=subject_node.col_offset
             )]
-        if subject_platform not in allowed_platforms:
+        if subject_platform not in self._ALLOWED_PLATFORMS:
             return [InvalidPlatformInSubjectError(
                 lineno=subject_node.lineno,
                 col_offset=subject_node.col_offset
@@ -66,8 +65,21 @@ class SubjectChecker(ScenarioChecker):
                 isinstance(arg, ast.Attribute)
                 and isinstance(arg.value, ast.Name)
                 and arg.value.id == "Platform"
-                and arg.attr in Platforms.LABEL_TO_SUBJECT_PLATFORM
+                and arg.attr in Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM
             ):
-                return Platforms.LABEL_TO_SUBJECT_PLATFORM[arg.attr], arg
+                return Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM[arg.attr], arg
 
         return None, None
+
+    def _extract_subject_platform(self, subject_value: str) -> Optional[str]:
+        """
+        Извлекает платформу из последних круглых скобок в subject
+        Возвращает нормализованное значение (заменяет "_" на пробел, чтобы mobile app и mobile_app считались равными)
+        или None, если скобок в subject нет
+        """
+        matches = re.findall(r"\(([^()]*)\)", subject_value)
+        if not matches:
+            return None
+
+        last_parens = matches[-1].strip()
+        return last_parens.replace("_", " ")

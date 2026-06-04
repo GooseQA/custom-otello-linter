@@ -1,6 +1,6 @@
 class Platforms:
 
-    LABEL_TO_SUBJECT_PLATFORM = {
+    ALLURE_PLATFORM_TO_SUBJECT_PLATFORM = {
         "MOBILE": "mobile",
         "IOS_WEB_MOBILE": "ios web",
         "ANDROID_WEB_MOBILE": "android web",
