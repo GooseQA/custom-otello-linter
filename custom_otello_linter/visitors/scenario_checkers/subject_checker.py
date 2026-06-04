@@ -18,7 +18,7 @@ from custom_otello_linter.helpers.get_subject import get_subject
 @ScenarioVisitor.register_scenario_checker
 class SubjectChecker(ScenarioChecker):
 
-    _ALLOWED_PLATFORMS = (set(Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM.values()) | {"{platform}"})
+    _ALLOWED_PLATFORMS = (set(Platforms.ALLURE_TO_SUBJECT_PLATFORM.values()) | {"{platform}"})
 
     def check_scenario(self, context: Context, config) -> List[Error]:
         subject_value, subject_node = get_subject(context.scenario_node)
@@ -65,9 +65,9 @@ class SubjectChecker(ScenarioChecker):
                 isinstance(arg, ast.Attribute)
                 and isinstance(arg.value, ast.Name)
                 and arg.value.id == "Platform"
-                and arg.attr in Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM
+                and arg.attr in Platforms.ALLURE_TO_SUBJECT_PLATFORM
             ):
-                return Platforms.ALLURE_PLATFORM_TO_SUBJECT_PLATFORM[arg.attr], arg
+                return Platforms.ALLURE_TO_SUBJECT_PLATFORM[arg.attr], arg
 
         return None, None
 
@@ -77,9 +77,8 @@ class SubjectChecker(ScenarioChecker):
         Возвращает нормализованное значение (заменяет "_" на пробел, чтобы mobile app и mobile_app считались равными)
         или None, если скобок в subject нет
         """
-        matches = re.findall(r"\(([^()]*)\)", subject_value)
-        if not matches:
+        match = re.search(r".*\(([^()]*)\)", subject_value)
+        if not match:
             return None
 
-        last_parens = matches[-1].strip()
-        return last_parens.replace("_", " ")
+        return match.group(1).strip().replace("_", " ")
